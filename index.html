@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>进校通行证</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            background-color: #000; /* 多余部分显示黑色 */
+        }
+
+        /* 容器配置 */
+        .phone-screen {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin: 0 auto;
+        }
+
+        /* 背景图：已裁剪版，直接显示 */
+        .bg-image {
+            width: 100%;
+            height: auto; 
+            display: block;
+        }
+
+        /* --- 已删除 .top-cover-bar (绿色遮挡层) --- */
+
+        /* ================= 1. 动态时间条 ================= */
+        .dynamic-time-bar {
+            position: absolute;
+            /* ⚠️注意：因为你裁掉了顶部，如果时间条位置偏下，请尝试减小这个 22.6% */
+            top: 19.5%; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80.2%;  
+            height: 6.9%; 
+            
+            background-color: #4aa853; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px; 
+            font-weight: 500;
+            font-family: Helvetica, Arial, sans-serif;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+
+        /* ================= 2. 动态箭头 ================= */
+        .dynamic-arrow-zone {
+            position: absolute;
+            /* ⚠️注意：同上，如果箭头位置不对，请微调这个 38.5% */
+            top: 35.99%; 
+            
+            left: 50%;
+            transform: translateX(-50%) scale(1.81);
+            width: 160px;
+            height: 160px;
+            
+            /* border: 1px solid red; */ /* 调试用 */
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* 动画效果保持不变 */
+        .ripple-ring {
+            position: absolute;
+            width: 135px;
+            height: 135px;
+            border-radius: 50%;
+            background-color: rgba(66, 211, 102, 0.5);
+            animation: ripple 1.5s infinite ease-out;
+        }
+        .halo-ring {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px solid #3cc65e;
+            opacity: 0.3;
+        }
+        .core-circle {
+            width: 135px;
+            height: 135px;
+            background-color: #2ea94f; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border: 4px solid white; 
+            outline: 2px solid #2ea94f;
+            animation: heartbeat 1.5s infinite ease-in-out;
+        }
+        .arrow-svg {
+            width: 70px;
+            height: 70px;
+            fill: white;
+            stroke: white;
+            stroke-width: 1;
+        }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.05); } 
+            30% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-screen">
+        <img src="bg.jpg" class="bg-image" alt="背景">
+
+        <div class="dynamic-time-bar" id="realTime"></div>
+
+        <div class="dynamic-arrow-zone">
+            <div class="ripple-ring"></div>
+            <div class="halo-ring"></div>
+            <div class="core-circle">
+                <svg class="arrow-svg" viewBox="0 0 24 24">
+                    <line x1="12" y1="19" x2="12" y2="5" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <polyline points="5 12 12 5 19 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const h = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('realTime').innerText = `${y}年${m}月${d}日 ${h}:${min}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
